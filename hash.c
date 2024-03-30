@@ -104,40 +104,52 @@ void imprimirTabelaHash(Pessoa *tabela[N]) {
     }
 }
 
-void contarTabelaHash(Pessoa *tabela[N]) {
-    int quantidade = 0;
-
-    for (int i = 0; i < N; i++) {
-        if (tabela[i] != NULL) {
-            quantidade++;
-        }
-    }
-
-    printf("Quantidade de Pessoas na Tabela Hash: %d\n", quantidade);
-}
-
-//Função para liberar a memória alocada para a tabela
-void liberarTabelaHash(Pessoa *tabela[N])
-{
-    for (int i = 0; i < N; i++){
-        if (tabela[i] != NULL){
-            free(tabela[i]);
-        }
-    }
-}
-
 int main(void)
 {
-    Pessoa *tabela[N];
-    inicializarTabelaHash(tabela);
+  Pessoa *tabela[N];
+  int opcao;
 
-    extrairDadosArquivo("todosOsContatos.txt", tabela);
+  inicializarTabelaHash(tabela);
 
-    imprimirTabelaHash(tabela);
+  do
+  {
+    // Menu de opções
+    printf("1 - Extrair dados do arquivo\n");
+    printf("2 - Imprimir tabela hash\n");
+    printf("3 - Buscar contato\n");
+    printf("4 - Sair\n");
+    printf("Digite a opção desejada: ");
+    scanf("%d", &opcao);
+  }
+    switch (opcao)
+    {
+    case 1:
+      extrairDadosArquivo("todosOsContatos.txt", tabela);
+      break;
+    case 2:
+      imprimirTabelaHash(tabela);
+      break;
+    case 3:
+      printf("Saindo do programa...\n");
+      break;
+    case 4:
+      char telefone[21];
+      printf("Digite o telefone do contato a ser buscado: ");
+      scanf("%s", telefone);
 
-    contarTabelaHash(tabela);
+      Pessoa *contato = buscarNaTabelaHash(tabela, telefone);
 
-    liberarTabelaHash(tabela);
+      if (contato != NULL) {
+        printf("Nome: %s\n", contato->nome);
+        printf("Telefone: %s\n", contato->telefone);
+        printf("Email: %s\n", contato->email);
+      } else {
+        printf("Contato não encontrado.\n");
+      }
+      break;
 
-    return 0;
+  } while (opcao != 3);
 }
+   default:
+    
+gi
