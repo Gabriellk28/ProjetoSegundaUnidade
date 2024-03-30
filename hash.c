@@ -96,6 +96,21 @@ void extrairDadosArquivo(char *nome_arquivo, Pessoa *tabela[N])
     fclose(arquivo);
 }
 
+//Função para contar o total de contatos na tabela
+void contarContatos(Pessoa *tabela[N])
+{
+    int quantidade = 0;
+
+    for(int i = 0; i < N; i++){
+        if(tabela[i] != NULL){
+            quantidade++;
+        }
+    }
+
+    printf("Quantidade de Contatos: %d\n", quantidade);
+}
+
+
 //Função para imprimir a tabela
 void imprimirTabelaHash(Pessoa *tabela[N])
 {
@@ -147,6 +162,7 @@ int main(void)
         switch (opcao)
         {
         case 1:
+            contarContatos(tabela);
         break;
 
         case 2:
