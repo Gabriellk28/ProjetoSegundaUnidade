@@ -130,31 +130,32 @@ int main(void)
     int opcao;
 
     inicializarTabelaHash(tabela);
+    extrairDadosArquivo("todosOsContatos.txt", tabela);
 
     do
     {
         // Menu de opções
-        printf("\nMenu de Opções:\n");
-        printf("1 - Extrair dados do arquivo\n");
-        printf("2 - Imprimir tabela hash\n");
-        printf("3 - Buscar contato\n");
-        printf("4 - Sair\n");
-        printf("Digite a opção desejada: ");
+        printf("Menu de Opções:\n");
+        printf("[1] - Ver Total de Contatos\n");
+        printf("[2] - Imprimir Contatos\n");
+        printf("[3] - Buscar Contato\n");
+        printf("[4] - Inserir Contato\n");
+        printf("[5] - Remover Contato\n");
+        printf("[6] - Sair\n");
         scanf("%d", &opcao);
 
         switch (opcao)
         {
         case 1:
-            extrairDadosArquivo("todosOsContatos.txt", tabela);
-            break;
+        break;
+
         case 2:
             imprimirTabelaHash(tabela);
-            break;
+        break;
+
         case 3:
-            printf("Saindo do programa...\n");
-            break;
-        case 4:
             char telefone[21];
+
             printf("Digite o telefone do contato a ser buscado: ");
             scanf("%s", telefone);
 
@@ -166,11 +167,23 @@ int main(void)
                 printf("Telefone: %s\n", contato->telefone);
                 printf("Email: %s\n", contato->email);
             }
-            else
-            {
-                printf("Contato não encontrado.\n");
-            }
-            break;
+                else
+                {
+                    printf("Contato não encontrado.\n");
+                }
+        break;
+
+        case 4:
+            printf("Saindo do programa...\n");
+        break;
+
+        case 5:
+            printf("Saindo do programa...\n");
+        break;
+
+        case 6:
+            printf("Sainda do Programa...\n");
+
         }
 
     } while (opcao != 3);
