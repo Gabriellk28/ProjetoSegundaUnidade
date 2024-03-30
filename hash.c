@@ -18,7 +18,7 @@ void inicializarTabelaHash(Pessoa *tabela[N])
     }
 }
 
-int hash(char *chave)
+in t hash(char *chave)
 {
     int soma = 0;
     for(int i = 0; chave[i] != '\0'; i++){
@@ -92,6 +92,20 @@ void imprimirTabelaHash(Pessoa *tabela[N]) {
     }
 }
 
+Pessoa *buscarNaTabelaHash(Pessoa *tabela[N], char *telefone) {
+  int indice = hash(telefone);
+
+  while (tabela[indice] != NULL) {
+    if (strcmp(tabela[indice]->telefone, telefone) == 0) {
+      return tabela[indice]; // Contato encontrado
+    }
+    indice++;
+  }
+
+  return NULL; // Contato não encontrado
+}
+
+
 int main()
 {
   Pessoa *tabela[N];
@@ -104,7 +118,8 @@ int main()
     // Menu de opções
     printf("1 - Extrair dados do arquivo\n");
     printf("2 - Imprimir tabela hash\n");
-    printf("3 - Sair\n");
+    printf("3 - Buscar contato\n");
+    printf("4 - Sair\n");
     printf("Digite a opção desejada: ");
     scanf("%d", &opcao);
   }
@@ -119,6 +134,25 @@ int main()
     case 3:
       printf("Saindo do programa...\n");
       break;
-    default:
-    }
+    case 4:
+      char telefone[21];
+      printf("Digite o telefone do contato a ser buscado: ");
+      scanf("%s", telefone);
+
+      Pessoa *contato = buscarNaTabelaHash(tabela, telefone);
+
+      if (contato != NULL) {
+        printf("Nome: %s\n", contato->nome);
+        printf("Telefone: %s\n", contato->telefone);
+        printf("Email: %s\n", contato->email);
+      } else {
+        printf("Contato não encontrado.\n");
+      }
+      break;
+
+    // ...
+  } while (opcao != 3);
 }
+   default:
+    
+gi
