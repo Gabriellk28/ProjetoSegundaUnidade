@@ -92,14 +92,33 @@ void imprimirTabelaHash(Pessoa *tabela[N]) {
     }
 }
 
-int main(void)
+int main()
 {
-    Pessoa *tabela[N];
-    inicializarTabelaHash(tabela);
+  Pessoa *tabela[N];
+  int opcao;
 
-    extrairDadosArquivo("todosOsContatos.txt", tabela);
+  inicializarTabelaHash(tabela);
 
-    imprimirTabelaHash(tabela);
-
-    return 0;
+  do
+  {
+    // Menu de opções
+    printf("1 - Extrair dados do arquivo\n");
+    printf("2 - Imprimir tabela hash\n");
+    printf("3 - Sair\n");
+    printf("Digite a opção desejada: ");
+    scanf("%d", &opcao);
+  }
+    switch (opcao)
+    {
+    case 1:
+      extrairDadosArquivo("todosOsContatos.txt", tabela);
+      break;
+    case 2:
+      imprimirTabelaHash(tabela);
+      break;
+    case 3:
+      printf("Saindo do programa...\n");
+      break;
+    default:
+    }
 }
