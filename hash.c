@@ -150,9 +150,9 @@ int main()
       }
       break;
 
-    // ...
+    
   } while (opcao != 3);
 }
    default:
     
-gi
+
