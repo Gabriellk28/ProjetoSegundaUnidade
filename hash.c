@@ -104,6 +104,19 @@ void imprimirTabelaHash(Pessoa *tabela[N]) {
     }
 }
 
+Pessoa *buscarNaTabelaHash(Pessoa *tabela[N], char *telefone) {
+  int indice = hash(telefone);
+
+  while (tabela[indice] != NULL) {
+    if (strcmp(tabela[indice]->telefone, telefone) == 0) {
+      return tabela[indice]; // Contato encontrado
+    }
+    indice++;
+  }
+
+  return NULL; // Contato não encontrado
+}
+
 int main(void)
 {
   Pessoa *tabela[N];
