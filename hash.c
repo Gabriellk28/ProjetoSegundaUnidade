@@ -3,45 +3,56 @@
 #include <stdlib.h>
 
 #define N 10007
+#define MAX_TENTATIVAS 1000 // Número máximo de tentativas de sondagem
 
-typedef struct pessoa
-{
+typedef struct pessoa {
     char nome[31];
     char telefone[21];
     char email[41];
 } Pessoa;
 
-void inicializarTabelaHash(Pessoa *tabela[N])
-{
-    for(int i = 0; i < N; i++) {
+void inicializarTabelaHash(Pessoa *tabela[N]) {
+    for (int i = 0; i < N; i++) {
         tabela[i] = NULL;
     }
 }
 
-in t hash(char *chave)
-{
+int hash(char *chave) {
     int soma = 0;
-    for(int i = 0; chave[i] != '\0'; i++){
+    for (int i = 0; chave[i] != '\0'; i++) {
         soma += chave[i];
     }
     return soma % N;
 }
 
-void inserirNaTabelaHash(Pessoa *tabela[N], char *nome, char *telefone, char *email) {
-    int indice = hash(telefone);
-    
-    if(tabela[indice] == NULL){
-        tabela[indice] = (Pessoa *)malloc(sizeof(Pessoa));
-        if(tabela[indice] == NULL) {
-            fprintf(stderr, "Erro ao alocar memória.\n");
-            exit(1);
-        }
-        strcpy(tabela[indice]->nome, nome);
-        strcpy(tabela[indice]->telefone, telefone);
-        strcpy(tabela[indice]->email, email);
-    }
-    // Tratamento de colisões
+int sondagemQuadratica(int indice, int i) {
+    return (indice + i * i) % N;
 }
+
+void inserirNaTabelaHash(Pessoa *tabela[N], char *nome, char *telefone, char *email) {
+    int indice = hash(nome);
+    int i = 0;
+    
+    while (tabela[indice] != NULL && i < N) {
+        indice = sondagemQuadratica(indice, i);
+        i++;
+    }
+
+    if (i == N) {
+        fprintf(stderr, "Erro: Tabela hash cheia.\n");
+        exit(1);
+    }
+
+    tabela[indice] = (Pessoa *)malloc(sizeof(Pessoa));
+    if (tabela[indice] == NULL) {
+        fprintf(stderr, "Erro ao alocar memória.\n");
+        exit(1);
+    }
+    strcpy(tabela[indice]->nome, nome);
+    strcpy(tabela[indice]->telefone, telefone);
+    strcpy(tabela[indice]->email, email);
+}
+
 
 void extrairDadosArquivo(char *nome_arquivo, Pessoa *tabela[N]) {
     // Variáveis para armazenar temporariamente os dados
@@ -80,6 +91,7 @@ void extrairDadosArquivo(char *nome_arquivo, Pessoa *tabela[N]) {
     fclose(arquivo);
 }
 
+//Função para imprimir a tabela
 void imprimirTabelaHash(Pessoa *tabela[N]) {
     for (int i = 0; i < N; i++) {
         if (tabela[i] != NULL) {
@@ -92,21 +104,7 @@ void imprimirTabelaHash(Pessoa *tabela[N]) {
     }
 }
 
-Pessoa *buscarNaTabelaHash(Pessoa *tabela[N], char *telefone) {
-  int indice = hash(telefone);
-
-  while (tabela[indice] != NULL) {
-    if (strcmp(tabela[indice]->telefone, telefone) == 0) {
-      return tabela[indice]; // Contato encontrado
-    }
-    indice++;
-  }
-
-  return NULL; // Contato não encontrado
-}
-
-
-int main()
+int main(void)
 {
   Pessoa *tabela[N];
   int opcao;
@@ -150,9 +148,9 @@ int main()
       }
       break;
 
-    
+    // ...
   } while (opcao != 3);
 }
    default:
     
-
+gi
