@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <ctype.h>
 
 #define N 10007
 #define M 7500
@@ -11,7 +12,20 @@ typedef struct pessoa
     char nome[31];
     char telefone[21];
     char email[41];
-} Pessoa;j
+} Pessoa;
+
+//Função para bloquear caracteres estranhos no menu de opções
+int verificaNumeros(char string[2])
+{
+    int i;
+    for(i = 0; i < strlen(string); i++){
+        if (!isdigit(string[i])) {
+            printf("Entrada Inválida\n");
+            return 0;
+        }
+    }
+    return 1;
+}
 
 void inicializarTabelaHash(Pessoa *tabela[N])
 {
@@ -141,33 +155,34 @@ void imprimirTabelaHash(Pessoa *tabela[N])
     }
 }
 
-Pessoa *buscarNaTabelaHash(Pessoa *tabela[N], char *telefone)
+Pessoa *buscarNaTabelaHash(Pessoa *tabela[N], char pesquisa)
 {
-    int indice = hash(telefone);
+  int indice = hash(pesquisa.chave);
 
-    while (indice < N && tabela[indice] != NULL)
-    {
-        if (strcmp(tabela[indice]->telefone, telefone) == 0)
-        {
-            return tabela[indice]; // Contato encontrado
+  while (indice < N && tabela[indice] != NULL)
+  {
+    switch (pesquisa.tipo) {
+      case NOME:
+        if (strcmp(tabela[indice]->nome, (char *)pesquisa.chave) == 0) {
+          return tabela[indice];
         }
-
-        indice++;
+        break;
+      case TELEFONE:
+        if (strcmp(tabela[indice]->telefone, (char *)pesquisa.chave) == 0) {
+          return tabela[indice];
+        }
+        break;
+      case EMAIL:
+        if (strcmp(tabela[indice]->email, (char *)pesquisa.chave) == 0) {
+          return tabela[indice];
+        }
+        break;
     }
 
-    return NULL; // Contato não encontrado
-}
+    indice++;
+  }
 
-int verificaNumeros(char nome[21])
-{
-    int i;
-    for(i = 0; i < strlen(nome); i++){
-        if (!isdigit(nome[i])) {
-            printf("Entrada Inválida\n");
-            return 0;
-        }
-    }
-    return 1;
+  return NULL;
 }
 
 // Função para inserir um novo contato na tabela
@@ -189,6 +204,7 @@ int main(void)
 {
     Pessoa *tabela[N];
     int opcao;
+    char veirificacao[2];
 
     inicializarTabelaHash(tabela);
     extrairDadosArquivo("todosOsContatos.txt", tabela);
@@ -203,7 +219,9 @@ int main(void)
         printf("[4] - Inserir Contato\n");
         printf("[5] - Remover Contato\n");
         printf("[6] - Sair\n");
-        scanf("%d", &opcao);
+        
+        scanf("%c", &veirificacao);
+
 
         switch (opcao)
         {
