@@ -158,6 +158,18 @@ Pessoa *buscarNaTabelaHash(Pessoa *tabela[N], char *telefone)
     return NULL; // Contato não encontrado
 }
 
+int verificaNumeros(char nome[21])
+{
+    int i;
+    for(i = 0; i < strlen(nome); i++){
+        if (!isdigit(nome[i])) {
+            printf("Entrada Inválida\n");
+            return 0;
+        }
+    }
+    return 1;
+}
+
 // Função para inserir um novo contato na tabela
 void inserirContato(Pessoa *tabela[N])
 {
