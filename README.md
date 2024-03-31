@@ -58,9 +58,3 @@ O programa apresenta um menu de opções ao usuário, permitindo que ele realize
 **Observações:**
 
 
-**Recursos Adicionais:**
-
-* Wikipedia - Função Hash: [URL inválido removido]
-* Vídeo sobre sondagem quadrática: [URL inválido removido]
-
-**Espero que esta explicação mais detalhada seja útil!**
