@@ -155,34 +155,54 @@ void imprimirTabelaHash(Pessoa *tabela[N])
     }
 }
 
-Pessoa *buscarNaTabelaHash(Pessoa *tabela[N], char pesquisa)
+Pessoa *buscarNaTabelaHash(Pessoa *tabela[N], char *chave, int tipo)
 {
-  int indice = hash(pesquisa.chave);
+    int indice = hash(chave);
+    int i = 0;
+    int tentativas = 0;
 
-  while (indice < N && tabela[indice] != NULL)
-  {
-    switch (pesquisa.tipo) {
-      case NOME:
-        if (strcmp(tabela[indice]->nome, (char *)pesquisa.chave) == 0) {
-          return tabela[indice];
+    while (tabela[indice] != NULL && tentativas < MAX_TENTATIVAS)
+    {
+        switch (tipo)
+        {
+        case 1: // Busca por nome
+            if (strcmp(tabela[indice]->nome, chave) == 0)
+            {
+                return tabela[indice];
+            }
+            break;
+        case 2: // Busca por telefone
+            if (strcmp(tabela[indice]->telefone, chave) == 0)
+            {
+                return tabela[indice];
+            }
+            break;
+        case 3: // Busca por email
+            if (strcmp(tabela[indice]->email, chave) == 0)
+            {
+                return tabela[indice];
+            }
+            break;
         }
-        break;
-      case TELEFONE:
-        if (strcmp(tabela[indice]->telefone, (char *)pesquisa.chave) == 0) {
-          return tabela[indice];
-        }
-        break;
-      case EMAIL:
-        if (strcmp(tabela[indice]->email, (char *)pesquisa.chave) == 0) {
-          return tabela[indice];
-        }
-        break;
+
+        indice = sondagemQuadratica(indice, i);
+        i++;
+        tentativas++;
     }
 
-    indice++;
-  }
+    return NULL;
+}
 
-  return NULL;
+int verificaNumeros(char nome[21])
+{
+    int i;
+    for(i = 0; i < strlen(nome); i++){
+        if (!isdigit(nome[i])) {
+            printf("Entrada Inválida\n");
+            return 0;
+        }
+    }
+    return 1;
 }
 
 // Função para inserir um novo contato na tabela
@@ -234,22 +254,28 @@ int main(void)
             break;
 
         case 3:
-            char telefone[21];
-
-            printf("Digite o telefone do contato a ser buscado: ");
-            scanf("%s", telefone);
-
-            Pessoa *contato = buscarNaTabelaHash(tabela, telefone);
-
-            if (contato != NULL)
             {
-                printf("Nome: %s\n", contato->nome);
-                printf("Telefone: %s\n", contato->telefone);
-                printf("Email: %s\n", contato->email);
-            }
-            else
-            {
-                printf("Contato não encontrado.\n");
+              char busca[31];
+              int tipo;
+
+              printf("Digite o tipo de busca (1 - Nome, 2 - Telefone, 3 - Email): ");
+              scanf("%d", &tipo);
+
+              printf("Digite o valor da busca: ");
+              scanf(" %[^\n]", busca);
+
+              Pessoa *contato = buscarNaTabelaHash(tabela, busca, tipo);
+
+              if (contato != NULL)
+              {
+                  printf("Nome: %s\n", contato->nome);
+                  printf("Telefone: %s\n", contato->telefone);
+                  printf("Email: %s\n", contato->email);
+              }
+              else
+              {
+                  printf("Contato não encontrado.\n");
+              }
             }
             break;
 
