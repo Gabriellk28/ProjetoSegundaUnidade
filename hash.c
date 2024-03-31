@@ -141,21 +141,34 @@ void imprimirTabelaHash(Pessoa *tabela[N])
     }
 }
 
-Pessoa *buscarNaTabelaHash(Pessoa *tabela[N], char *telefone)
+Pessoa *buscarNaTabelaHash(Pessoa *tabela[N], Pesquisa pesquisa)
 {
-    int indice = hash(telefone);
+  int indice = hash(pesquisa.chave);
 
-    while (indice < N && tabela[indice] != NULL)
-    {
-        if (strcmp(tabela[indice]->telefone, telefone) == 0)
-        {
-            return tabela[indice]; // Contato encontrado
+  while (indice < N && tabela[indice] != NULL)
+  {
+    switch (pesquisa.tipo) {
+      case NOME:
+        if (strcmp(tabela[indice]->nome, (char *)pesquisa.chave) == 0) {
+          return tabela[indice];
         }
-
-        indice++;
+        break;
+      case TELEFONE:
+        if (strcmp(tabela[indice]->telefone, (char *)pesquisa.chave) == 0) {
+          return tabela[indice];
+        }
+        break;
+      case EMAIL:
+        if (strcmp(tabela[indice]->email, (char *)pesquisa.chave) == 0) {
+          return tabela[indice];
+        }
+        break;
     }
 
-    return NULL; // Contato não encontrado
+    indice++;
+  }
+
+  return NULL;
 }
 
 int verificaNumeros(char nome[21])
