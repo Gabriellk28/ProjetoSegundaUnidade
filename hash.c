@@ -11,7 +11,7 @@ typedef struct pessoa
     char nome[31];
     char telefone[21];
     char email[41];
-} Pessoa;
+} Pessoa;j
 
 void inicializarTabelaHash(Pessoa *tabela[N])
 {
