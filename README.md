@@ -53,7 +53,7 @@ O programa apresenta um menu de opções ao usuário, permitindo que ele realize
 
 * **Inserir Contato:** Permite que o usuário digite os dados de um novo contato e o insere na tabela hash.
 
-* **Remover Contato:** Esta opção está incompleta no código.
+* **Remover Contato:** 
 
 * **Sair:** Encerra o programa.
 
