@@ -195,12 +195,13 @@ void inserirContato(Pessoa *tabela[N])
 
 int main(void)
 {
-    Pessoa *tabela[N];
-    int opcao1, opcao2;
+    Pessoa *tabela[N]; 
+    int opcao1 = 0, opcao2 = 0;
 
     inicializarTabelaHash(tabela);
     extrairDadosArquivo("todosOsContatos.txt", tabela);
 
+    //Laço de repetição para o menu de opções
     do
     {
         // Menu de opções
