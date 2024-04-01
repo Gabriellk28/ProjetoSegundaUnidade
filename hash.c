@@ -193,6 +193,19 @@ void inserirContato(Pessoa *tabela[N])
     inserirNaTabelaHash(tabela, nome, telefone, email);
 }
 
+void removerContato(Pessoa *tabela[N], char *string)
+{
+    for(int i = 0; i < N; i++) {
+        if(tabela[i] != NULL && strcmp(tabela[i]->nome, string) == 0) {
+            free(tabela[i]);
+            tabela[i] = NULL;
+            printf("Contato removido com sucesso.\n");
+            return;
+        }
+    }
+    printf("Contato não encontrado para remoção.\n");
+}
+
 int main(void)
 {
     Pessoa *tabela[N];
