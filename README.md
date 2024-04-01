@@ -38,6 +38,8 @@ A função lê cada linha do arquivo e insere os dados na tabela hash.
 * **inserirContato:** Esta função pede ao usuário o nome, telefone e email de um novo contato e o insere na tabela hash.
 
 * **verificaNumeros:** Esta função verifica se uma string contém apenas números. A função é usada para validar o telefone.
+  
+* `removerContato(Pessoa *tabela[N], char *string)`: Remove um contato da tabela hash pelo nome (a implementar).
 
 **Menu de opções:**
 
@@ -51,10 +53,11 @@ O programa apresenta um menu de opções ao usuário, permitindo que ele realize
 
 * **Inserir Contato:** Permite que o usuário digite os dados de um novo contato e o insere na tabela hash.
 
-* **Remover Contato:** Esta opção está incompleta no código.
+* **Remover Contato:** 
 
 * **Sair:** Encerra o programa.
 
 **Observações:**
+
 
 
