@@ -3,8 +3,8 @@
 #include <stdlib.h>
 #include <ctype.h>
 
-#define N 10007
-#define M 7500
+#define N 10007// Tamanho da tabela hash
+#define M 7500// Número máximo de contatos a serem extraídos
 #define MAX_TENTATIVAS 1000 // Número máximo de tentativas de sondagem
 
 typedef struct pessoa // Estrutura para armazenar os dados de um contato
@@ -14,7 +14,7 @@ typedef struct pessoa // Estrutura para armazenar os dados de um contato
     char email[41];// Email do contato
 } Pessoa;
 
-void inicializaTabelaHash(Pessoa *tabela[N])// Função para inicializar a tabela hash
+void inicializarTabelaHash(Pessoa *tabela[N])// Função para inicializar a tabela hash
 {
     for(int i = 0; i < N; i++){ // Percorre todos os índices da tabela e seta para NULL
         tabela[i] = NULL;
@@ -35,7 +35,7 @@ int sondagemQuadratica(int indice, int i) // Função de sondagem quadrática pa
     return(indice + i * i) % N;// Retorna o índice original + i^2 (i elevado ao quadrado)
 }
 
-void inseriNaTabelaHash(Pessoa *tabela[N], char *nome, char *telefone, char *email) // Função para inserir um novo contato na tabela hash
+void inserirNaTabelaHash(Pessoa *tabela[N], char *nome, char *telefone, char *email) // Função para inserir um novo contato na tabela hash
 {
     int indice = hash(nome);// Calcula o índice inicial usando a função hash
     int i = 0;
@@ -52,7 +52,7 @@ void inseriNaTabelaHash(Pessoa *tabela[N], char *nome, char *telefone, char *ema
 
     tabela[indice] = (Pessoa *)malloc(sizeof(Pessoa)); // Aloca memória para o novo contato
     if(tabela[indice] == NULL){
-        fprintf(stderr, "Erro ao alocar memória.\n\n");
+        fprintf(stderr, "Erro ao alocar memória.\n");
         exit(1);
     }
 
@@ -61,54 +61,64 @@ void inseriNaTabelaHash(Pessoa *tabela[N], char *nome, char *telefone, char *ema
     strcpy(tabela[indice]->email, email);
 }
 
-void extraiDadosArquivo(char *nome_arquivo, Pessoa *tabela[N]) // Função para extrair dados de um arquivo e inserir na tabela hash
+void extrairDadosArquivo(char *nome_arquivo, Pessoa *tabela[N]) // Função para extrair dados de um arquivo e inserir na tabela hash
 {
+    // Variáveis para armazenar temporariamente os dados
     char nome[31], telefone[21], email[41];
+    // Variável para armazenar a linha lida do arquivo
     char linha[100];
     int linhasExtraias = 0;
 
+    // Abrindo o arquivo
     FILE *arquivo = fopen(nome_arquivo, "r");
 
+    // Verificando se houve erro ao abrir o arquivo
     if(arquivo == NULL){
-        fprintf(stderr, "Erro ao abrir o arquivo.\n\n");
+        fprintf(stderr, "Erro ao abrir o arquivo.\n");
         exit(1);
     }
 
-    while (fgets(linha, sizeof(linha), arquivo) != NULL && linhasExtraias < M){
-        if(strstr(linha, "Nome: ") != NULL){
+    // Loop para ler cada linha do arquivo até o final ou extrair 75%
+    while(fgets(linha, sizeof(linha), arquivo) != NULL && linhas_extraias < M){
+        // Verificando se a linha começa com "Nome: "
+        if (strstr(linha, "Nome: ") != NULL) {
             sscanf(linha, "Nome: %[^\n]", nome);
         }
-        else if(strstr(linha, "Telefone: ") != NULL){
+        // Verificando se a linha começa com "Telefone: "
+        else if (strstr(linha, "Telefone: ") != NULL) {
             sscanf(linha, "Telefone: %[^\n]", telefone);
         }
-        else if(strstr(linha, "Email: ") != NULL){
+        // Verificando se a linha começa com "Email: "
+        else if (strstr(linha, "Email: ") != NULL) {
             sscanf(linha, "Email: %[^\n]", email);
             inseriNaTabelaHash(tabela, nome, telefone, email);
-            linhasExtraias++;
+            linhas_extraias++;
         }
     }
 
+    // Fechando o arquivo
     fclose(arquivo);
 }
 
-void contaContatos(Pessoa *tabela[N]) 
-{
+//Função para contar o total de contatos na tabela
+void contarContatos(Pessoa *tabela[N]){
     int quantidade = 0;
 
-    for(int i = 0; i < N; i++){
-        if (tabela[i] != NULL){
-            quantidade++;
+    for(int i = 0; i < N; i++){// Percorre todos os índices da tabela
+        if(tabela[i] != NULL){// Se o índice não está vazio
+            quantidade++;// Incrementa o contador
         }
     }
 
-    printf("Quantidade de Contatos: %d\n\n", quantidade);
+    printf("Quantidade de Contatos: %d\n", quantidade); // Exibe a quantidade de contatos
 }
 
-void imprimiTabelaHash(Pessoa *tabela[N])
+//Função para imprimir a tabela
+void imprimirTabelaHash(Pessoa *tabela[N]) // Imprime todos os contatos da tabela hash
 {
-    for(int i = 0; i < N; i++){
-        if (tabela[i] != NULL) {
-            printf("Índice %d:\n", i);
+    for(int i = 0; i < N; i++){// Percorre todos os índices da tabela
+        if(tabela[i] != NULL){// Se o índice não está vazio
+            printf("Índice %d:\n", i); // Exibe o índice e os dados do contato
             printf("Nome: %s\n", tabela[i]->nome);
             printf("Telefone: %s\n", tabela[i]->telefone);
             printf("Email: %s\n", tabela[i]->email);
@@ -117,12 +127,13 @@ void imprimiTabelaHash(Pessoa *tabela[N])
     }
 }
 
-Pessoa *buscaContato(Pessoa *tabela[N], int opcao, char *string) 
+Pessoa *buscarContato(Pessoa *tabela[N], int opcao, char *string) // Busca um contato na tabela hash por nome, telefone ou email
 {
-    switch(opcao){
+    switch(opcao)
+    {
     case 1: // Buscar pelo nome
-        for(int i = 0; i < N; i++){
-            if(tabela[i] != NULL && strcmp(tabela[i]->nome, string) == 0){
+        for(int i = 0; i < N; i++) {
+            if(tabela[i] != NULL && strcmp(tabela[i]->nome, string) == 0) {
                 printf("Pessoa encontrada:\n");
                 printf("Nome: %s\n", tabela[i]->nome);
                 printf("Telefone: %s\n", tabela[i]->telefone);
@@ -133,8 +144,8 @@ Pessoa *buscaContato(Pessoa *tabela[N], int opcao, char *string)
         break;
 
     case 2: // Buscar pelo telefone
-        for(int i = 0; i < N; i++){
-            if(tabela[i] != NULL && strcmp(tabela[i]->telefone, string) == 0){
+        for(int i = 0; i < N; i++) {
+            if(tabela[i] != NULL && strcmp(tabela[i]->telefone, string) == 0) {
                 printf("Pessoa encontrada:\n");
                 printf("Nome: %s\n", tabela[i]->nome);
                 printf("Telefone: %s\n", tabela[i]->telefone);
@@ -145,8 +156,8 @@ Pessoa *buscaContato(Pessoa *tabela[N], int opcao, char *string)
         break;
 
     case 3: // Buscar pelo email
-        for(int i = 0; i < N; i++){
-            if (tabela[i] != NULL && strcmp(tabela[i]->email, string) == 0){
+        for(int i = 0; i < N; i++) {
+            if(tabela[i] != NULL && strcmp(tabela[i]->email, string) == 0) {
                 printf("Pessoa encontrada:\n");
                 printf("Nome: %s\n", tabela[i]->nome);
                 printf("Telefone: %s\n", tabela[i]->telefone);
@@ -157,53 +168,54 @@ Pessoa *buscaContato(Pessoa *tabela[N], int opcao, char *string)
         break;
 
     default:
-        printf("Opção inválida.\n\n");
+        printf("Opção inválida.\n");
         return NULL;
     }
 
-    printf("Contato não encontrado.\n\n");
+    printf("Contato não encontrado.\n");
     return NULL;
 }
 
-void inseriContato(Pessoa *tabela[N]) 
+
+// Função para inserir um novo contato na tabela
+void inserirContato(Pessoa *tabela[N])
 {
     char nome[31], telefone[21], email[41];
 
-    printf("Informe o Nome: ");
+    printf("Informe o Nome: "); // Lê os dados do novo contato
     scanf(" %[^\n]", nome);
     printf("Informe o Telefone: ");
     scanf(" %[^\n]", telefone);
     printf("Informe o e-mail: ");
     scanf(" %[^\n]", email);
-    inseriNaTabelaHash(tabela, nome, telefone, email);
-    printf("Contato Inserir com Sucesso.\n\n");
+
+    inserirNaTabelaHash(tabela, nome, telefone, email);// Insere o contato na tabela hash
 }
 
-void removeContato(Pessoa *tabela[N], char *string)
+void removerContato(Pessoa *tabela[N], char *string)// Remove um contato da tabela hash
 {
-    for(int i = 0; i < N; i++){
-        if(tabela[i] != NULL && strcmp(tabela[i]->nome, string) == 0){
-            free(tabela[i]);
-            tabela[i] = NULL;
-            printf("Contato removido com sucesso.\n\n");
+    for(int i = 0; i < N; i++) {// Percorre todos os índices da tabela
+        if(tabela[i] != NULL && strcmp(tabela[i]->nome, string) == 0) { // Se o nome do contato na posição atual for igual ao nome buscado
+            free(tabela[i]); // Libera a memória alocada para o contato
+            tabela[i] = NULL;// Seta o ponteiro da tabela para NULL
+            printf("Contato removido com sucesso.\n");
             return;
         }
     }
-    printf("Contato não encontrado para remoção.\n\n");
+    printf("Contato não encontrado para remoção.\n");// Se o contato não foi encontrado
 }
 
-int verificaString(char string[])
+int main(void)
 {
-    if(strlen(string) != 1 || !isdigit(string[0])){
-        printf("Entrada Inválida.\n\n");
-        return -1;
-    }
-    return atoi(string);
-}
+    Pessoa *tabela[N];
+    int opcao1, opcao2; // Variáveis para armazenar a opção do usuário
 
-void Menu(int tipoMenu)
-{
-    if(tipoMenu == 1){
+    inicializarTabelaHash(tabela);// Inicializa a tabela hash
+    extrairDadosArquivo("todosOsContatos.txt", tabela);// Extrai dados de um arquivo e insere na tabela hash
+
+    do // Loop principal do programa
+    {
+        // Menu de opções
         printf("Menu de Opções:\n");
         printf("[1] - Ver o Total de Contatos\n");
         printf("[2] - Imprimir Contatos\n");
@@ -211,109 +223,47 @@ void Menu(int tipoMenu)
         printf("[4] - Inserir Contato\n");
         printf("[5] - Remover Contato\n");
         printf("[6] - Sair\n");
-    } else if(tipoMenu == 2){
-        printf("Digite uma opção:\n");
-        printf("[1] - Buscar Pelo Nome\n");
-        printf("[2] - Buscar Pelo Telefone\n");
-        printf("[3] - Buscar Pelo Email\n");
-    }
-}
+        scanf(" %d", &opcao1);// Lê a opção do usuário
 
-//Função para limpar o buffer
-void LimpaBuffer(void)
-{
-    int valorLido; //Armazena os valores lidos do buffer de entrada
-    do
-    {
-        valorLido = getchar(); //Lê um caracter do buffer
-    } while ((valorLido != '\n') && (valorLido != EOF)); //Continua até encontrar um caractere de nova linha e atingir o final do arquivo.
-}
+        switch(opcao1) // Switch para tratar as opções do menu
+        {
+        case 1:// Opção para contar o total de contatos
+            contarContatos(tabela);
+            break;
 
+        case 2:// Opção para imprimir a tabela hash
+            imprimirTabelaHash(tabela);
+            break;
 
-int main(void)
-{
-    Pessoa *tabela[N];
-    int opcao1 = 0, opcao2 = 0;
-    char entrada[100], busca[100];
+        case 3:// Opção para buscar um contato
+            char string[41]; // Variável para armazenar a string de busca
+            printf("Digite uma opção:\n");
+            printf("[1] - Buscar Pelo Nome\n");
+            printf("[2] - Buscar Pelo Telefone\n");
+            printf("[3] - Buscar Pelo Email\n");
+            scanf(" %d", &opcao2);
+            printf("Digite a string de busca: ");
+            scanf(" %[^\n]", string); 
+            buscarContato(tabela, opcao2, string);
+            break;
 
-    inicializaTabelaHash(tabela);
-    extraiDadosArquivo("todosOsContatos.txt", tabela);
+        case 4: // Opção para inserir um novo contato
+            inserirContato(tabela);
+            break;
 
-    do{
-        Menu(1);
-        do{
-            scanf(" %[^\n]", entrada);
-            opcao1 = verificaString(entrada);
-            if(opcao1 == -1){
-                Menu(1);
+        case 5:// Opção para remover um contato
+            break;
+
+        case 6: // Opção para sair do programa
+            printf("Programa Finalizado.\n");
+            break;
+
+        default:
+            if(opcao1 != 6){
+                printf("Entrada Inválida.\n\n");
             }
-            LimpaBuffer();
-        }while(opcao1 == -1);
-
-        switch(opcao1){
-            case 1:
-                contaContatos(tabela);
-                break;
-
-            case 2:
-                imprimiTabelaHash(tabela);
-                break;
-
-            case 3:
-                Menu(2);
-
-                do{
-                    scanf(" %[^\n]", busca);
-                    opcao2 = verificaString(busca);
-                    if(opcao2 == -1){
-                        Menu(2);
-                    }
-                    LimpaBuffer();
-                }while(opcao2 == -1);
-
-                switch(opcao2){
-                    case 1:
-                        printf("Digite a informação a ser buscada: ");
-                        scanf(" %[^\n]", entrada);
-                        buscaContato(tabela, opcao2, entrada);
-                        break;
-                    case 2:
-                        printf("Digite a informação a ser buscada: ");
-                        scanf(" %[^\n]", entrada);
-                        buscaContato(tabela, opcao2, entrada);
-                        break;
-                    case 3:
-                        printf("Digite a informação a ser buscada: ");
-                        scanf(" %[^\n]", entrada);
-                        buscaContato(tabela, opcao2, entrada);
-                        break;
-                    default:
-                        if(opcao2 != 1 && opcao2 != 2 && opcao2 != 3){
-                            printf("Entrada Inválida.\n\n");
-                        }
-                }
-                break;
-
-            case 4:
-                inseriContato(tabela);
-                break;
-
-            case 5:
-                printf("Informe o nome do contato a ser removido: ");
-                scanf(" %[^\n]", entrada);
-                removeContato(tabela, entrada);
-                break;
-
-            case 6:
-                printf("Programa Finalizado.\n");
-                break;
-
-            default:
-                if(opcao1 != 6){
-                    printf("Entrada Inválida.\n\n");
-                }
-        }
-    } while (opcao1 != 6);
+        } // fim do switch
+    } while (opcao1 != 6); // fim do do-while
 
     return 0;
 }
