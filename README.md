@@ -1,6 +1,7 @@
 ## ProjetoSegundaUnidade
 
-**Metodos:**Mapeação de chave Dobra,Sondagem Quadratica
+**Metodos:**
+Mapeação de chave Dobra,Sondagem Quadratica
 
 **Estrutura dos dados:**
 
