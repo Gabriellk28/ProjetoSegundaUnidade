@@ -5,61 +5,63 @@
 
 #define N 10007
 #define M 7500
+#define MAX_TENTATIVAS 1000 // Número máximo de tentativas de sondagem
 
-typedef struct pessoa 
+typedef struct pessoa // Estrutura para armazenar os dados de um contato
 {
-    char nome[31];
-    char telefone[21];
-    char email[41];
+    char nome[31];// Nome do contato
+    char telefone[21];// Telefone do contato
+    char email[41];// Email do contato
 } Pessoa;
 
-void inicializarTabelaHash(Pessoa *tabela[N]) 
+void inicializarTabelaHash(Pessoa *tabela[N])// Função para inicializar a tabela hash
 {
-    for(int i = 0; i < N; i++){
+    for(int i = 0; i < N; i++){ // Percorre todos os índices da tabela e seta para NULL
         tabela[i] = NULL;
     }
 }
 
-int hash(char *chave) 
+int hash(char *chave)// Função de hash para gerar um índice a partir do nome
 {
     int soma = 0;
-    for(int i = 0; chave[i] != '\0'; i++){
+    for(int i = 0; chave[i] != '\0'; i++){// Soma os valores ASCII de cada caractere da chave
         soma += chave[i];
     }
-    return soma % N;
+    return soma % N;// Retorna o módulo da soma pelo tamanho da tabela
 }
 
-int sondagemQuadratica(int indice, int i){
-    return (indice + i * i) % N;
-}
-
-void inserirNaTabelaHash(Pessoa *tabela[N], char *nome, char *telefone, char *email) 
+int sondagemQuadratica(int indice, int i) // Função de sondagem quadrática para resolver colisões
 {
-    int indice = hash(nome);
+    return(indice + i * i) % N;// Retorna o índice original + i^2 (i elevado ao quadrado)
+}
+
+void inserirNaTabelaHash(Pessoa *tabela[N], char *nome, char *telefone, char *email) // Função para inserir um novo contato na tabela hash
+{
+    int indice = hash(nome);// Calcula o índice inicial usando a função hash
     int i = 0;
 
-    while(tabela[indice] != NULL && i < N){
-        indice = sondagemQuadratica(indice, i);
+    while(tabela[indice] != NULL && i < N){// Loop para encontrar um índice disponível na tabela
+        indice = sondagemQuadratica(indice, i);// Se o índice estiver ocupado, tenta o próximo usando sondagem quadrática
         i++;
     }
 
     if(i == N){
-        fprintf(stderr, "Erro: Tabela hash cheia.\n\n");
+        fprintf(stderr, "Erro: Tabela hash cheia.\n");// Se a tabela estiver cheia, exibe uma mensagem de erro
         exit(1);
     }
 
-    tabela[indice] = (Pessoa *)malloc(sizeof(Pessoa));
+    tabela[indice] = (Pessoa *)malloc(sizeof(Pessoa)); // Aloca memória para o novo contato
     if(tabela[indice] == NULL){
         fprintf(stderr, "Erro ao alocar memória.\n\n");
         exit(1);
     }
 
-    strcpy(tabela[indice]->nome, nome);
+    strcpy(tabela[indice]->nome, nome); // Copia os dados para o novo contato
     strcpy(tabela[indice]->telefone, telefone);
     strcpy(tabela[indice]->email, email);
 }
 
-void extrairDadosArquivo(char *nome_arquivo, Pessoa *tabela[N]) 
+void extrairDadosArquivo(char *nome_arquivo, Pessoa *tabela[N]) // Função para extrair dados de um arquivo e inserir na tabela hash
 {
     char nome[31], telefone[21], email[41];
     char linha[100];
