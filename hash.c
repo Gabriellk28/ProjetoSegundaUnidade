@@ -65,7 +65,7 @@ void extraiDadosArquivo(char *nome_arquivo, Pessoa *tabela[N]) // Função para 
 {
     char nome[31], telefone[21], email[41];
     char linha[100];
-    int linhas_extraias = 0;
+    int linhasExtraias = 0;
 
     FILE *arquivo = fopen(nome_arquivo, "r");
 
@@ -74,7 +74,7 @@ void extraiDadosArquivo(char *nome_arquivo, Pessoa *tabela[N]) // Função para 
         exit(1);
     }
 
-    while (fgets(linha, sizeof(linha), arquivo) != NULL && linhas_extraias < M){
+    while (fgets(linha, sizeof(linha), arquivo) != NULL && linhasExtraias < M){
         if(strstr(linha, "Nome: ") != NULL){
             sscanf(linha, "Nome: %[^\n]", nome);
         }
@@ -84,7 +84,7 @@ void extraiDadosArquivo(char *nome_arquivo, Pessoa *tabela[N]) // Função para 
         else if(strstr(linha, "Email: ") != NULL){
             sscanf(linha, "Email: %[^\n]", email);
             inseriNaTabelaHash(tabela, nome, telefone, email);
-            linhas_extraias++;
+            linhasExtraias++;
         }
     }
 
