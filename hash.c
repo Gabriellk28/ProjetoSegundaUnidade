@@ -5,7 +5,6 @@
 
 #define N 10007// Tamanho da tabela hash
 #define M 7500// Número máximo de contatos a serem extraídos
-#define MAX_TENTATIVAS 1000 // Número máximo de tentativas de sondagem
 
 typedef struct pessoa // Estrutura para armazenar os dados de um contato
 {
@@ -21,13 +20,20 @@ void inicializarTabelaHash(Pessoa *tabela[N])// Função para inicializar a tabe
     }
 }
 
-int hash(char *chave)// Função de hash para gerar um índice a partir do nome
+//Função hash para calcular o índice da chave
+int hash(char *chave)
 {
-    int soma = 0;
-    for(int i = 0; chave[i] != '\0'; i++){// Soma os valores ASCII de cada caractere da chave
-        soma += chave[i];
+    int soma = 0, i = 0;
+    while (chave[i] != '\0') { // Enquanto não chegarmos ao final da chave
+        int parte = 0;
+        // Somamos os próximos dígitos ASCII da chave para formar uma parte
+        for (int j = 0; j < 4 && chave[i] != '\0'; j++, i++) {
+            parte += chave[i];
+        }
+        // Adicionamos a parte à soma
+        soma += parte;
     }
-    return soma % N;// Retorna o módulo da soma pelo tamanho da tabela
+    return soma % N; // Retorna o módulo da soma pelo tamanho da tabela
 }
 
 int sondagemQuadratica(int indice, int i) // Função de sondagem quadrática para resolver colisões
@@ -79,7 +85,7 @@ void extrairDadosArquivo(char *nome_arquivo, Pessoa *tabela[N]) // Função para
     }
 
     // Loop para ler cada linha do arquivo até o final ou extrair 75%
-    while(fgets(linha, sizeof(linha), arquivo) != NULL && linhas_extraias < M){
+    while(fgets(linha, sizeof(linha), arquivo) != NULL && linhasExtraias < M){
         // Verificando se a linha começa com "Nome: "
         if (strstr(linha, "Nome: ") != NULL) {
             sscanf(linha, "Nome: %[^\n]", nome);
@@ -91,8 +97,8 @@ void extrairDadosArquivo(char *nome_arquivo, Pessoa *tabela[N]) // Função para
         // Verificando se a linha começa com "Email: "
         else if (strstr(linha, "Email: ") != NULL) {
             sscanf(linha, "Email: %[^\n]", email);
-            inseriNaTabelaHash(tabela, nome, telefone, email);
-            linhas_extraias++;
+            inserirNaTabelaHash(tabela, nome, telefone, email);
+            linhasExtraias++;
         }
     }
 
