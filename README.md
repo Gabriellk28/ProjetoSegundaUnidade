@@ -1,5 +1,7 @@
 ## ProjetoSegundaUnidade
 
+**Metodos:**Mapeação de chave Dobra,Sondagem Quadratica
+
 **Estrutura dos dados:**
 
 * **Pessoa:** Essa estrutura define um tipo de dado chamado "Pessoa", que possui três campos:
